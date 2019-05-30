@@ -1,0 +1,19 @@
+{
+  "name": "Minna No Akizuki",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Share the cart for your group",
+  "author": "@gpioblink",
+  "permissions": [
+    "cookies",
+    "*://akizukidenshi.com/*",
+    "pageCapture",
+    "webRequest",
+    "identity"
+  ],
+  "browser_action": {
+    "default_title": "Akizuki Cart to CSV",
+    "default_popup": "index.html"
+  },
+  "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self';"
+}
