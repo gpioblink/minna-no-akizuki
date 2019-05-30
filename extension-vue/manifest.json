@@ -15,5 +15,10 @@
     "default_title": "Akizuki Cart to CSV",
     "default_popup": "index.html"
   },
+  "sandbox":{
+    "pages": [
+        "main.html"
+    ]
+  },
   "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self';"
 }

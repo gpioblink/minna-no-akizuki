@@ -7,9 +7,11 @@
     {{ product.name }} ( {{ product.price }}円 x {{ product.amount }}個 )
   </li>
 </ul>
-<div class="inputWithIcon"><input v-model="message" placeholder="送信先ID"></div>
-<div class="inputWithIcon"><input v-model="message" placeholder="送信者名"></div>
-<button href="#" id="save">送信</button>
+<div class="inputWithIcon"><input v-model="cartName" placeholder="カート名"></div>
+{{cart}}
+<div class="inputWithIcon"><input v-model="userName" placeholder="送信者名"></div>
+{{user}}
+<button @click="uploadCart" id="save">送信</button>
 </div> 
 </template>
 
@@ -20,18 +22,27 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      products: []
+      products: [],
+      cartName: '',
+      userName: ''
     }
   },
   methods: {
-    parseBlob: (blob) => {
+    uploadCart: function() {
+      console.log(this.cartName, this.userName);
+      const db = firebase.firestore();
+      db.collection('rooms').doc(this.cartName).collection('carts').add({user: this.userName, cart:this.products}).then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+      });
+    },
+    parseBlob: function(blob) {
       return new Promise(resolve => {
           const reader = new FileReader();
           reader.onload = () => { resolve(reader.result) };
           reader.readAsText(blob, 'shift-jis');
       });
     },
-    checkStatus: (res) => {
+    checkStatus: function(res) {
       if (res.status >= 200 && res.status < 300) {
         return res
       } else {
@@ -40,13 +51,13 @@ export default {
         throw error
       }
     },
-    parseHTML: (text) => {
+    parseHTML: function(text) {
       return new DOMParser().parseFromString(text, 'text/html');
     },
-    showReturned: (response) => {
+    showReturned: function(response) {
       console.log(response);
     },
-    parseCartData: (dom) => {
+    parseCartData: function(dom) {
       const productList = [];
       const productsTableXML = dom.querySelectorAll('form > .cart_table tr');
       productsTableXML.forEach((products) => {
@@ -79,7 +90,6 @@ export default {
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-
     const cartUrl = 'http://akizukidenshi.com/catalog/cart/cart.aspx';
     fetch(cartUrl)
     .then(this.checkStatus)
