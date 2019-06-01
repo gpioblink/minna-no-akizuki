@@ -2,7 +2,8 @@
 <div>
   <h1>カートリスト</h1>
   <h2>現時点でシェアされてる商品と場所を表示しています</h2>
-  {{cartId}}
+  {{cartId}}<br>
+  {{orderList}}
 </div>
 </template>
 
@@ -25,11 +26,14 @@ export default {
       const db = firebase.firestore();
       const docRef = db.collection("rooms").doc(this.cartId).collection("carts");
       
-      docRef.get()
-      .then(this.extractCartsArrayFromSnapshot)
+      docRef.onSnapshot(this.updateCartsInfo);
+    },
+    updateCartsInfo: function(doc) {
+      this.extractCartsArrayFromSnapshot(doc)
       .then(this.makeLinearOrderArrayFromCartsArray)
       .then(this.combineSamePartsInLinearList)
       .then(this.storeDetailInformationForOrderMap)
+      .then(orderList => {this.orderList = orderList; console.log(orderList);})
       .catch(this.printError);
     },
     extractCartsArrayFromSnapshot: function(querySnapshot) {
@@ -38,7 +42,13 @@ export default {
       querySnapshot.forEach(function(doc) {
         cartsData.push(doc.data());
       });
-      return cartsData;
+      return new Promise((resolve, reject) => {
+        if(cartsData.length > 0) {
+            resolve(cartsData);
+        } else {
+            reject("Your cart is empty.");
+        }
+      });
     },
     makeLinearOrderArrayFromCartsArray: function(cartsArray) {
       let productsArray = [];
@@ -76,6 +86,7 @@ export default {
           orderList.push(json);
         });
       }
+      return orderList;
     },
     printError: function(error) {
       console.log("Error getting document:", error);
