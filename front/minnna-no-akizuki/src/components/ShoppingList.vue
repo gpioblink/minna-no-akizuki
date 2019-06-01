@@ -2,8 +2,28 @@
 <div>
   <h1>カートリスト</h1>
   <h2>現時点でシェアされてる商品と場所を表示しています</h2>
-  {{cartId}}<br>
-  {{orderList}}
+  <h3>表示中のカート: {{cartId}}</h3>
+  <table>
+      <thead>
+          <tr>
+            <th>通販コード</th>
+            <th>商品名</th>
+            <th>単価</th>
+            <th>陳列場所</th>
+            <th>購入個数</th>
+          </tr>
+      </thead>
+
+      <tbody>
+          <tr v-for="order in orderList" :key="order.id">
+              <td>{{order.id}}</td>
+              <td>{{order.name}}</td>
+              <td>{{order.price.value}} {{order.price.currency}}</td>
+              <td>{{order.stores[1].place}}</td>
+              <td>{{order.order.amount}}</td>
+          </tr>
+      </tbody>
+  </table>
 </div>
 </template>
 
