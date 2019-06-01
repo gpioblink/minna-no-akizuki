@@ -21,7 +21,10 @@ export default new Router({
     {
       path: '/list/:cartId',
       name: 'ShoppingList',
-      component: ShoppingList
+      component: ShoppingList,
+      props: (route) => ({
+        cartId: route.params.cartId
+      })
     },
     {
       path: '/dist/:cartId',

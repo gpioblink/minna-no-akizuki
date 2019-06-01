@@ -17,8 +17,8 @@ export default {
     }
   },
   methods: {
-    changePage: () => {
-      router.push({ name: 'ShoppingList', params: { cartId: 123 }});
+    changePage: function() {
+      router.push({ name: 'ShoppingList', params: { cartId: this.id }});
     }
   }
 }

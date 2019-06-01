@@ -2,18 +2,83 @@
 <div>
   <h1>カートリスト</h1>
   <h2>現時点でシェアされてる商品と場所を表示しています</h2>
-  <input v-model="message" placeholder="カートId">
-  <button>はじめる</button>
+  {{cartId}}
 </div>
 </template>
 
 <script>
 import firebase from 'firebase';
 export default {
+  props: ['cartId'],
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      orderList: []
+    }
+  },
+  mounted() {
+    this.fetchCartsInfo();
+  },
+  methods: {
+    fetchCartsInfo: function() {
+      console.log(this.cartId);
+      const db = firebase.firestore();
+      const docRef = db.collection("rooms").doc(this.cartId).collection("carts");
+      
+      docRef.get()
+      .then(this.extractCartsArrayFromSnapshot)
+      .then(this.makeLinearOrderArrayFromCartsArray)
+      .then(this.combineSamePartsInLinearList)
+      .then(this.storeDetailInformationForOrderMap)
+      .catch(this.printError);
+    },
+    extractCartsArrayFromSnapshot: function(querySnapshot) {
+      let cartsData = [];
+      console.log(querySnapshot);
+      querySnapshot.forEach(function(doc) {
+        cartsData.push(doc.data());
+      });
+      return cartsData;
+    },
+    makeLinearOrderArrayFromCartsArray: function(cartsArray) {
+      let productsArray = [];
+      for(const cart of cartsArray) {
+        console.log(cart);
+        cart.cart.forEach(function(part) {
+          productsArray.push(part);
+        });
+      }
+      return productsArray;
+    },
+    combineSamePartsInLinearList: function(linearOrderArray) {
+      let map = new Map(linearOrderArray.map(o => [o.orderCode, Object.assign({}, o)]));
+      
+      // Mapで商品の重複を避けると、商品個数の数がおかしくなるので一度初期化してから追加し直す
+      for(let [key, product] of map){
+        product["amount"] = 0;
+      }
+
+      for(const product of linearOrderArray){
+        // TODO: mapをgetして、値変更してsetするなんてコスト悪すぎるからなんとかしたい
+        let qmap = map.get(product["orderCode"]);
+        qmap["amount"] += product["amount"];
+        map.set(product["orderCode"], qmap)
+      }
+      return map;
+    },
+    storeDetailInformationForOrderMap: function(orderMap) {
+      let orderList = [];
+      for(let [key, product] of orderMap){
+        fetch(`https://akizuki-api.appspot.com/component/${product["orderCode"]}.json`)
+        .then(response => response.json())
+        .then(json => {
+          json["order"] = product;
+          orderList.push(json);
+        });
+      }
+    },
+    printError: function(error) {
+      console.log("Error getting document:", error);
     }
   }
 }
