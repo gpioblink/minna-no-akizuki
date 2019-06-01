@@ -24,7 +24,33 @@
           </tr>
       </tbody>
   </table>
+
+  <h1>購入者リスト</h1>
+  <h2>どの商品を誰が要望したか表示します</h2>
+  <div v-for="person in originalList" :key="person.user">
+    <h3>{{person.user}} さんの買い物かご</h3>
+    <table>
+        <thead>
+            <tr>
+              <th>通販コード</th>
+              <th>商品名</th>
+              <th>単価</th>
+              <th>購入個数</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr v-for="cart in person.cart" :key="cart.orderCode">
+                <td>{{cart.orderCode}}</td>
+                <td>{{cart.name}}</td>
+                <td>{{cart.price}}</td>
+                <td>{{cart.amount}}</td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
 </div>
+
 </template>
 
 <script>
@@ -34,7 +60,8 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      orderList: []
+      orderList: [],
+      originalList: []
     }
   },
   mounted() {
@@ -50,6 +77,7 @@ export default {
     },
     updateCartsInfo: function(doc) {
       this.extractCartsArrayFromSnapshot(doc)
+      .then(cartsArray => this.originalList = cartsArray)
       .then(this.makeLinearOrderArrayFromCartsArray)
       .then(this.combineSamePartsInLinearList)
       .then(this.storeDetailInformationForOrderMap)
@@ -62,6 +90,7 @@ export default {
       querySnapshot.forEach(function(doc) {
         cartsData.push(doc.data());
       });
+      console.log("取得直後カート中身",cartsData);
       return new Promise((resolve, reject) => {
         if(cartsData.length > 0) {
             resolve(cartsData);
