@@ -4,11 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import firebase from 'firebase'
-import Vuetify from 'vuetify/lib'
+import vuetify from './plugins/vuetify' // path to vuetify export
 
 Vue.config.productionTip = false
-
-Vue.use(Vuetify)
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -28,6 +26,7 @@ firebase.initializeApp(firebaseConfig);
 new Vue({
   el: '#app',
   router,
+  vuetify,
   components: { App },
   template: '<App/>'
 })
