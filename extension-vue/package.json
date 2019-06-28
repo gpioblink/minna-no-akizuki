@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "firebase": "^6.0.4",
-    "vue": "^2.5.11"
+    "vue": "^2.5.11",
+    "vuetify": "^1.5.16"
   },
   "browserslist": [
     "> 1%",

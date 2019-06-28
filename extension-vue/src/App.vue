@@ -1,18 +1,64 @@
 <template>
-<div>
-<h1>Minnna No Akizuki By Gpioblink</h1>
-<h3>現在カートの中にある商品</h3>
-<ul>
-  <li v-for="(product, index) in products" :key='index'>
-    {{ product.name }} ( {{ product.price }}円 x {{ product.amount }}個 )
-  </li>
-</ul>
-<div class="inputWithIcon"><input v-model="cartName" placeholder="カート名"></div>
-{{cart}}
-<div class="inputWithIcon"><input v-model="userName" placeholder="送信者名"></div>
-{{user}}
-<button @click="uploadCart" id="save">送信</button>
-</div> 
+  <v-app id="inspire">
+    <v-layout>
+      <v-flex xs12>
+        <v-card>
+          <v-card-title primary-title class="pb-0">
+            <div>
+              <h3 class="headline mb-0">カート内容</h3>
+            </div>
+            <v-flex xs10>
+              <v-list two-line class="pb-0">
+                <template v-for="product in products">
+                  <v-list-tile
+                    :key="product.orderCode"
+                    avatar
+                  >
+                    <v-list-tile-avatar tile>
+                      <img :src="product.imgUrl">
+                    </v-list-tile-avatar>
+
+                    <v-list-tile-content>
+                      <v-list-tile-title v-html="product.name" class="caption"></v-list-tile-title>
+                      <v-list-tile-sub-title>{{ product.price }}円 x {{ product.amount }}個</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </template>
+              </v-list>
+              <p v-if="products == 0">カートに何も入っていません。秋月電子の買い物かごに商品を追加してもう一度お試しください。</p>
+            </v-flex>
+          </v-card-title>
+  
+          <v-card-actions>
+            <v-container>
+              <h3 class="headline mb-0">購入リクエスト</h3>
+              <v-layout row wrap>
+                <v-flex xs5>
+                  <v-text-field
+                      v-model="cartName"
+                      label="カート名"
+                    ></v-text-field>
+                </v-flex>
+                <v-flex xs1>
+                </v-flex>
+                <v-flex xs6>
+                <v-text-field
+                    v-model="cartName"
+                    label="送信者名"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs10>
+                </v-flex>
+                <v-flex xs2>
+                <v-btn flat color="success" @click="uploadCart">送信</v-btn>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-app>
 </template>
 
 <script>
@@ -115,78 +161,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-}
-
-h1, h2 {
-  font-weight: normal;
-}
-
-a {
-  color: #42b983;
-}
-
-ul {
-  padding: 0;
-  position: relative;
-}
-
-ul li {
-  color: #2d8fdd;
-  border-left: solid 6px #2d8fdd;/*左側の線*/
-  background: #f1f8ff;/*背景色*/
-  margin-bottom: 3px;/*下のバーとの余白*/
-   line-height: 1.5;
-  padding: 0.5em;
-  list-style-type: none!important;/*ポチ消す*/
-}
-
-input[type="text"] {
-  width: 100%;
-  border: 2px solid #aaa;
-  border-radius: 4px;
-  margin: 8px 0;
-  outline: none;
-  padding: 8px;
-  box-sizing: border-box;
-  transition: 0.3s;
-}
-
-input[type="text"]:focus {
-  border-color: dodgerBlue;
-  box-shadow: 0 0 8px 0 dodgerBlue;
-}
-
-.inputWithIcon input[type="text"] {
-  padding-left: 40px;
-}
-
-.inputWithIcon {
-  position: relative;
-}
-
-.inputWithIcon i {
-  position: absolute;
-  left: 0;
-  top: 8px;
-  padding: 9px 8px;
-  color: #aaa;
-  transition: 0.3s;
-}
-
-.inputWithIcon input[type="text"]:focus + i {
-  color: dodgerBlue;
-}
-
-.inputWithIcon.inputIconBg i {
-  background-color: #aaa;
-  color: #fff;
-  padding: 9px 4px;
-  border-radius: 4px 0 0 4px;
-}
-
-.inputWithIcon.inputIconBg input[type="text"]:focus + i {
-  color: #fff;
-  background-color: dodgerBlue;
 }
 
 body {
