@@ -9,14 +9,14 @@ import firebase from 'firebase'
 Vue.config.productionTip = false
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyD2eNVsaaaYwBeFBlMGblbFqc8jZRnbRl8',
-  authDomain: 'fir-vue-chat-8092e.firebaseapp.com',
-  databaseURL: 'https://fir-vue-chat-8092e.firebaseio.com',
-  projectId: 'fir-vue-chat-8092e',
-  storageBucket: 'fir-vue-chat-8092e.appspot.com',
-  messagingSenderId: '373785443513',
-  appId: '1:373785443513:web:97f43272560046e4'
-}
+  apiKey: "AIzaSyDSfeHSw9cl9_9UbOCOqrTo_PPEowARQm0",
+  authDomain: "minna-no-akizuki.firebaseapp.com",
+  databaseURL: "https://minna-no-akizuki.firebaseio.com",
+  projectId: "minna-no-akizuki",
+  storageBucket: "minna-no-akizuki.appspot.com",
+  messagingSenderId: "847366748629",
+  appId: "1:847366748629:web:8e69891d9add9086"
+};
 firebase.initializeApp(firebaseConfig)
 
 new Vue({
