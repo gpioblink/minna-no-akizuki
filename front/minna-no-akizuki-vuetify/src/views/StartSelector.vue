@@ -1,33 +1,39 @@
 <template>
-<v-app id="inspire">
+<v-content>
 <v-layout column align-center>
-  <h1 display-4>ログイン</h1>
-  <h2>カートIDを入力してください。そのIDが存在しなければ新規作成します。</h2>
-    
-  <v-form
-    ref="form"
-    v-model="valid"
-    :lazy-validation="lazy"
-  >
-    <v-text-field
-      v-model="id"
-      :counter="10"
-      label="カートID"
-      required
-    ></v-text-field>
-
-    <v-btn
-      :disabled="!valid"
-      color="success"
-      class="mr-3"
-      @click="changePage"
+  <v-container>
+  <v-card class="pa-4">
+    <v-card-title class="font-weight-bold">ログイン</v-card-title>
+    <v-card-text><p>カートIDを入力してください。そのIDが存在しなければ新規作成します。</p>
+    <v-form
+      ref="form"
+      v-model="valid"
+      :lazy-validation="lazy"
     >
-    はじめる
-    </v-btn>
+      <v-text-field
+        class="mt-0"
+        v-model="id"
+        :counter="10"
+        label="カートID"
+        required
+      ></v-text-field>
 
-  </v-form>
+      <v-btn
+        :disabled="!valid"
+        color="success"
+        class="mr-3"
+        @click="changePage"
+      >
+      はじめる
+      </v-btn>
+    </v-form>
+    </v-card-text>
+
+
+    </v-card>
+  </v-container>
 </v-layout>
-</v-app>
+</v-content>
 </template>
 
 <script>

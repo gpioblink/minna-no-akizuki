@@ -1,43 +1,32 @@
 <template>
-<v-app id="inspire">
+<v-content>
   <h1>カートリスト</h1>
   <h2>現時点でシェアされてる商品と場所を表示しています</h2>
   <h3>表示中のカート: {{cartId}}</h3>
 
   <v-data-table
-      :headers="originalHeader"
+      :headers="orderHeader"
       :items="orderList"
+      select-all
+      class="elevation-1"
     >
     <template v-slot:items="order">
+    <tr :active="order.selected" @click="order.selected = !order.selected">
+      <td>
+        <v-checkbox
+          :input-value="props.selected"
+          primary
+          hide-details
+        ></v-checkbox>
+      </td>
       <td>{{order.item.id}}</td>
       <td>{{order.item.name}}</td>
       <td>{{order.item.price.value}} {{order.item.price.currency}}</td>
       <td>{{order.item.stores[1].place}}</td>
       <td>{{order.item.order.amount}}</td>
+    </tr>
     </template>
   </v-data-table>
-
-  <table>
-      <thead>
-          <tr>
-            <th>通販コード</th>
-            <th>商品名</th>
-            <th>単価</th>
-            <th>陳列場所</th>
-            <th>購入個数</th>
-          </tr>
-      </thead>
-
-      <tbody>
-          <tr v-for="order in orderList" :key="order.id">
-              <td>{{order.id}}</td>
-              <td>{{order.name}}</td>
-              <td>{{order.price.value}} {{order.price.currency}}</td>
-              <td>{{order.stores[1].place}}</td>
-              <td>{{order.order.amount}}</td>
-          </tr>
-      </tbody>
-  </table>
 
   <h1>購入者リスト</h1>
   <h2>どの商品を誰が要望したか表示します</h2>
@@ -64,8 +53,7 @@
         </tbody>
     </table>
   </div>
-</v-app>
-
+  </v-content>
 </template>
 
 <script>
@@ -75,6 +63,18 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
+      orderHeader: [
+        { text: '通販コード', value: 'orderCode' },
+        {
+          text: '商品名',
+          align: 'left',
+          sortable: false,
+          value: 'name'
+        },
+        { text: '単価', value: 'price' },
+        { text: '陳列場所', value: 'place' },
+        { text: '購入個数', value: 'amount' },
+      ],
       originalHeader: [
         { text: '通販コード', value: 'orderCode' },
         {
