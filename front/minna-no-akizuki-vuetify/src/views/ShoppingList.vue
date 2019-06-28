@@ -1,8 +1,22 @@
 <template>
-<div>
+<v-app id="inspire">
   <h1>カートリスト</h1>
   <h2>現時点でシェアされてる商品と場所を表示しています</h2>
   <h3>表示中のカート: {{cartId}}</h3>
+
+  <v-data-table
+      :headers="originalHeader"
+      :items="orderList"
+    >
+    <template v-slot:items="order">
+      <td>{{order.item.id}}</td>
+      <td>{{order.item.name}}</td>
+      <td>{{order.item.price.value}} {{order.item.price.currency}}</td>
+      <td>{{order.item.stores[1].place}}</td>
+      <td>{{order.item.order.amount}}</td>
+    </template>
+  </v-data-table>
+
   <table>
       <thead>
           <tr>
@@ -35,6 +49,7 @@
               <th>通販コード</th>
               <th>商品名</th>
               <th>単価</th>
+              <th>陳列場所</th>
               <th>購入個数</th>
             </tr>
         </thead>
@@ -49,7 +64,7 @@
         </tbody>
     </table>
   </div>
-</div>
+</v-app>
 
 </template>
 
@@ -60,7 +75,23 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      orderList: [],
+      originalHeader: [
+        { text: '通販コード', value: 'orderCode' },
+        {
+          text: '商品名',
+          align: 'left',
+          sortable: false,
+          value: 'name'
+        },
+        { text: '単価', value: 'price' },
+        { text: '陳列場所', value: 'place' },
+        { text: '購入個数', value: 'amount' },
+      ],
+      orderList: [
+      ],
+      dammyOrderList: [
+        {id: "dammy", name: "usuleff", price: { value: "12", currency:"100"}}
+      ],
       originalList: []
     }
   },
