@@ -1,10 +1,33 @@
 <template>
-<div>
-  <h1>ログイン</h1>
+<v-app id="inspire">
+<v-layout column align-center>
+  <h1 display-4>ログイン</h1>
   <h2>カートIDを入力してください。そのIDが存在しなければ新規作成します。</h2>
-  <input v-model="id" placeholder="カートID">
-  <button v-on:click="changePage">はじめる</button>
-</div>
+    
+  <v-form
+    ref="form"
+    v-model="valid"
+    :lazy-validation="lazy"
+  >
+    <v-text-field
+      v-model="id"
+      :counter="10"
+      label="カートID"
+      required
+    ></v-text-field>
+
+    <v-btn
+      :disabled="!valid"
+      color="success"
+      class="mr-3"
+      @click="changePage"
+    >
+    はじめる
+    </v-btn>
+
+  </v-form>
+</v-layout>
+</v-app>
 </template>
 
 <script>
