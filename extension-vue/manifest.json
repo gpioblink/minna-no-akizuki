@@ -12,7 +12,7 @@
     "identity"
   ],
   "browser_action": {
-    "default_title": "Akizuki Cart to CSV",
+    "default_title": "Minnna no Akizuki",
     "default_popup": "index.html"
   },
   "sandbox":{
