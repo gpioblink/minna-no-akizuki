@@ -22,12 +22,9 @@ export default new Router({
     {
       path: '/',
       name: 'StartSelector',
-      component: StartSelector
-    },
-    {
-      path: '/:cartId',
-      name: 'StartSelector',
-      component: StartSelector
+      component: StartSelector,
+      props: (route) => ({
+      })
     },
     {
       path: '/list/:cartId',
@@ -40,7 +37,10 @@ export default new Router({
     {
       path: '/dist/:cartId',
       name: 'DistributeScreen',
-      component: DistributeScreen
+      component: DistributeScreen,
+      props: (route) => ({
+        cartId: route.params.cartId
+      })
     }
   ]
 })

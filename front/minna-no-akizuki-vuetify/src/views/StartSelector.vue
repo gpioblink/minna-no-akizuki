@@ -8,7 +8,6 @@
     <v-form
       ref="form"
       v-model="valid"
-      :lazy-validation="lazy"
     >
       <v-text-field
         class="mt-0"

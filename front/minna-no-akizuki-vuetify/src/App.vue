@@ -2,7 +2,7 @@
 <div>
   <v-app id="inspire">
     <v-toolbar color="indigo" dark fixed app>
-      <v-toolbar-title>みんなの秋月</v-toolbar-title>
+      <v-toolbar-title @click="changePage">みんなの秋月</v-toolbar-title>
     </v-toolbar>
     <router-view/>
   </v-app>
@@ -21,7 +21,12 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  methods: {
+    changePage: function() {
+      this.$router.push({ name: 'StartSelector'});
+    }
+  }
 }
 </script>
 

@@ -1,59 +1,54 @@
 <template>
-<v-content>
-  <h1>カートリスト</h1>
-  <h2>現時点でシェアされてる商品と場所を表示しています</h2>
-  <h3>表示中のカート: {{cartId}}</h3>
+<v-layout column align-center>
+  <v-content>
+    <v-card class="pa-4">
+      <h1>注文一覧リスト</h1>
+      <h2>現時点でシェアされてる商品と場所を表示しています</h2>
+      <h3>表示中のカート: {{cartId}}</h3>
 
-  <v-data-table
-      :headers="orderHeader"
-      :items="orderList"
-      select-all
-      class="elevation-1"
-    >
-    <template v-slot:items="order">
-    <tr :active="order.selected" @click="order.selected = !order.selected">
-      <td>
-        <v-checkbox
-          :input-value="props.selected"
-          primary
-          hide-details
-        ></v-checkbox>
-      </td>
-      <td>{{order.item.id}}</td>
-      <td>{{order.item.name}}</td>
-      <td>{{order.item.price.value}} {{order.item.price.currency}}</td>
-      <td>{{order.item.stores[1].place}}</td>
-      <td>{{order.item.order.amount}}</td>
-    </tr>
-    </template>
-  </v-data-table>
+      <v-data-table
+          :headers="orderHeader"
+          :items="orderList"
+          v-bind="pagination"
+          select-all
+          hide-actions
+          class="elevation-1"
+          item-key="orderList.key"
+        >
+        <template v-slot:items="order">
+        <tr :active="order.selected" @click="order.selected = !order.selected">
+          <td>
+            <v-checkbox
+              :input-value="order.selected"
+              primary
+              hide-details
+            ></v-checkbox>
+          </td>
+          <td>{{order.item.id}}</td>
+          <td>{{order.item.name}}</td>
+          <td>{{order.item.price.value}} <!-- {{order.item.price.currency}} --></td>
+          <td>{{order.item.stores[1].place}}</td>
+          <td>{{order.item.order.amount}}</td>
+        </tr>
+        </template>
+      </v-data-table>
 
-  <h1>購入者リスト</h1>
-  <h2>どの商品を誰が要望したか表示します</h2>
-  <div v-for="person in originalList" :key="person.user">
-    <h3>{{person.user}} さんの買い物かご</h3>
-    <table>
-        <thead>
-            <tr>
-              <th>通販コード</th>
-              <th>商品名</th>
-              <th>単価</th>
-              <th>陳列場所</th>
-              <th>購入個数</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr v-for="cart in person.cart" :key="cart.orderCode">
-                <td>{{cart.orderCode}}</td>
-                <td>{{cart.name}}</td>
-                <td>{{cart.price}}</td>
-                <td>{{cart.amount}}</td>
-            </tr>
-        </tbody>
-    </table>
-  </div>
+      <v-btn
+            color="success"
+            class="mr-3"
+            @click="changePage"
+          >
+          購入者リストを確認する
+      </v-btn>
+      <v-btn
+          color="warning"
+          class="mr-3"
+        >
+        編集権限を切る
+      </v-btn>
+    </v-card>
   </v-content>
+</v-layout>
 </template>
 
 <script>
@@ -63,6 +58,10 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
+      pagination: {
+        rowsPerPage: -1,
+        sortBy: 'price'
+      },
       orderHeader: [
         { text: '通販コード', value: 'orderCode' },
         {
@@ -89,9 +88,6 @@ export default {
       ],
       orderList: [
       ],
-      dammyOrderList: [
-        {id: "dammy", name: "usuleff", price: { value: "12", currency:"100"}}
-      ],
       originalList: []
     }
   },
@@ -99,6 +95,9 @@ export default {
     this.fetchCartsInfo();
   },
   methods: {
+    changePage: function() {
+      this.$router.push({ name: 'DistributeScreen', params: { cartId: this.cartId }});
+    },
     fetchCartsInfo: function() {
       console.log(this.cartId);
       const db = firebase.firestore();
