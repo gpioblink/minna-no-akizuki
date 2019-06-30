@@ -18,7 +18,7 @@
       
     <div v-for="person in originalList" :key="person.id">
       <v-card class="pa-4">
-        <v-card-title class="font-weight-bold">{{person.user}} さんの買い物かご {{person.id}}</v-card-title>
+        <v-card-title class="font-weight-bold">{{person.user}} さんの買い物かご</v-card-title>
         <v-card-text>
           <v-data-table
             :headers="originalHeader"
@@ -64,6 +64,7 @@
           >
           受け取り済みにする
           </v-btn>
+          <p>支払金額は、{{calcSumMoneyByPerson(person)}}円 です。</p>
         </v-card-text>
       </v-card>
     </div>
@@ -208,6 +209,13 @@ export default {
     },
     printError: function(error) {
       console.log("Error getting document:", error);
+    },
+    calcSumMoneyByPerson:function(originalPersonArray) {
+      let price = 0;
+      originalPersonArray.cart.forEach((order) => {
+        price += Number(order.price) * Number(order.amount);
+      });
+      return price;
     }
   }
 }
