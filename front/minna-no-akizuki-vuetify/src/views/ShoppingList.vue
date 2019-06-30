@@ -40,12 +40,12 @@
           >
           購入者リストを確認する
       </v-btn>
-      <v-btn
+      <!--<v-btn
           color="warning"
           class="mr-3"
         >
         編集権限を切る
-      </v-btn>
+      </v-btn>-->
     </v-card>
   </v-content>
 </v-layout>
