@@ -125,7 +125,9 @@ export default {
       let cartsData = [];
       console.log(querySnapshot);
       querySnapshot.forEach(function(doc) {
-        cartsData.push(doc.data());
+        const data = doc.data();
+        data.id = doc.id;
+        cartsData.push(data);
       });
       console.log("取得直後カート中身",cartsData);
       return new Promise((resolve, reject) => {
