@@ -43,7 +43,7 @@
                 </v-flex>
                 <v-flex xs6>
                 <v-text-field
-                    v-model="cartName"
+                    v-model="userName"
                     label="送信者名"
                   ></v-text-field>
                 </v-flex>
@@ -79,6 +79,9 @@ export default {
       const db = firebase.firestore();
       db.collection('rooms').doc(this.cartName).collection('carts').add({user: this.userName, cart:this.products}).then((docRef) => {
           console.log("Document written with ID: ", docRef.id);
+          alert("送信に成功しました！");
+          this.cartName = "";
+          this.userName = "";
       });
     },
     parseBlob: function(blob) {
