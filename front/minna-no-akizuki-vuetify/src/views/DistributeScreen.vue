@@ -37,12 +37,14 @@
           <v-btn
             color="success"
             class="mr-3"
+            @click="addPaymentFlag"
           >
           支払い済みにする
           </v-btn>
         </v-card-text>
       </v-card>
     </div>
+    <p>{{originalList}}</p>
   </v-content>
 </v-layout>
 </template>
@@ -92,6 +94,16 @@ export default {
   methods: {
     changePage: function() {
       this.$router.push({ name: 'ShoppingList', params: { cartId: this.cartId }});
+    },
+    addPaymentFlag: function() {
+      console.log(this.cartName, this.userName);
+      const db = firebase.firestore();
+      db.collection('rooms').doc(this.cartName).collection('carts').add({user: this.userName, cart:this.products}).then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+          alert("送信に成功しました！");
+          this.cartName = "";
+          this.userName = "";
+      });
     },
     fetchCartsInfo: function() {
       console.log(this.cartId);
