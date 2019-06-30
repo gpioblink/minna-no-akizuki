@@ -39,24 +39,34 @@
             v-if="person.payDate"
             disabled
             color="success"
-            class="mr-3"
-            @click="addPaymentFlag(person.id)"
           >
           {{person.payDate.toString()}} に支払い済み
           </v-btn>
           <v-btn
             v-else
             color="success"
-            class="mr-3"
             @click="addPaymentFlag(person.id)"
           >
           支払い済みにする
           </v-btn>
 
+          <v-btn
+            v-if="person.collectDate"
+            disabled
+            color="warning"
+          >
+          {{person.collectDate.toString()}} に受け取り済み
+          </v-btn>
+          <v-btn
+            v-else
+            color="warning"
+            @click="addCollectedFlag(person.id)"
+          >
+          受け取り済みにする
+          </v-btn>
         </v-card-text>
       </v-card>
     </div>
-    <p>{{originalList}}</p>
   </v-content>
 </v-layout>
 </template>
@@ -114,9 +124,16 @@ export default {
       const db = firebase.firestore();
       const docRef = db.collection("rooms").doc(this.cartId).collection("carts").doc(personId);
 
-      docRef.update({payDate: date}).then((docRef) => {
-          console.log("Thankyou for payment");
-      });
+      docRef.update({payDate: date});
+    },
+    addCollectedFlag: function(personId) {
+      const date = new Date().toLocaleString('ja-JP', {era:'long'});
+      console.log(personId, date);
+
+      const db = firebase.firestore();
+      const docRef = db.collection("rooms").doc(this.cartId).collection("carts").doc(personId);
+
+      docRef.update({collectDate: date});
     },
     fetchCartsInfo: function() {
       console.log(this.cartId);
