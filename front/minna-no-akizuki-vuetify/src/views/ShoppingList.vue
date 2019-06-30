@@ -40,6 +40,9 @@
           >
           購入者リストを確認する
       </v-btn>
+
+      合計支払金額は、{{ calcSumMoney() }}円です。
+
       <!--<v-btn
           color="warning"
           class="mr-3"
@@ -169,6 +172,13 @@ export default {
     },
     printError: function(error) {
       console.log("Error getting document:", error);
+    },
+    calcSumMoney: function() {
+      let price = 0;
+      this.orderList.forEach((order) => {
+        price += Number(order.price.value) * Number(order.order.amount);
+      });
+      return price;
     }
   }
 }
