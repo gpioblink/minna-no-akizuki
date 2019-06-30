@@ -16,9 +16,9 @@
       </v-card-actions>
     </v-card>
       
-    <div v-for="person in originalList" :key="person.user">
+    <div v-for="person in originalList" :key="person.id">
       <v-card class="pa-4">
-        <v-card-title class="font-weight-bold">{{person.user}} さんの買い物かご</v-card-title>
+        <v-card-title class="font-weight-bold">{{person.user}} さんの買い物かご {{person.id}}</v-card-title>
         <v-card-text>
           <v-data-table
             :headers="originalHeader"
@@ -34,11 +34,35 @@
               <td>{{cart.item.amount}}</td>
             </template>
           </v-data-table>
+          
           <v-btn
+            v-if="person.payDate"
+            disabled
             color="success"
-            class="mr-3"
+          >
+          {{person.payDate.toString()}} に支払い済み
+          </v-btn>
+          <v-btn
+            v-else
+            color="success"
+            @click="addPaymentFlag(person.id)"
           >
           支払い済みにする
+          </v-btn>
+
+          <v-btn
+            v-if="person.collectDate"
+            disabled
+            color="warning"
+          >
+          {{person.collectDate.toString()}} に受け取り済み
+          </v-btn>
+          <v-btn
+            v-else
+            color="warning"
+            @click="addCollectedFlag(person.id)"
+          >
+          受け取り済みにする
           </v-btn>
         </v-card-text>
       </v-card>
@@ -93,6 +117,24 @@ export default {
     changePage: function() {
       this.$router.push({ name: 'ShoppingList', params: { cartId: this.cartId }});
     },
+    addPaymentFlag: function(personId) {
+      const date = new Date().toLocaleString('ja-JP', {era:'long'});
+      console.log(personId, date);
+
+      const db = firebase.firestore();
+      const docRef = db.collection("rooms").doc(this.cartId).collection("carts").doc(personId);
+
+      docRef.update({payDate: date});
+    },
+    addCollectedFlag: function(personId) {
+      const date = new Date().toLocaleString('ja-JP', {era:'long'});
+      console.log(personId, date);
+
+      const db = firebase.firestore();
+      const docRef = db.collection("rooms").doc(this.cartId).collection("carts").doc(personId);
+
+      docRef.update({collectDate: date});
+    },
     fetchCartsInfo: function() {
       console.log(this.cartId);
       const db = firebase.firestore();
@@ -113,7 +155,9 @@ export default {
       let cartsData = [];
       console.log(querySnapshot);
       querySnapshot.forEach(function(doc) {
-        cartsData.push(doc.data());
+        const data = doc.data();
+        data.id = doc.id;
+        cartsData.push(data);
       });
       console.log("取得直後カート中身",cartsData);
       return new Promise((resolve, reject) => {
@@ -127,7 +171,7 @@ export default {
     makeLinearOrderArrayFromCartsArray: function(cartsArray) {
       let productsArray = [];
       for(const cart of cartsArray) {
-        console.log(cart);
+        console.log("cart", cart);
         cart.cart.forEach(function(part) {
           productsArray.push(part);
         });
