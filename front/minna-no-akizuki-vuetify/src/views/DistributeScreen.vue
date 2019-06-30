@@ -16,9 +16,9 @@
       </v-card-actions>
     </v-card>
       
-    <div v-for="person in originalList" :key="person.user">
+    <div v-for="person in originalList" :key="person.id">
       <v-card class="pa-4">
-        <v-card-title class="font-weight-bold">{{person.user}} さんの買い物かご</v-card-title>
+        <v-card-title class="font-weight-bold">{{person.user}} さんの買い物かご {{person.id}}</v-card-title>
         <v-card-text>
           <v-data-table
             :headers="originalHeader"
@@ -34,13 +34,25 @@
               <td>{{cart.item.amount}}</td>
             </template>
           </v-data-table>
+          
           <v-btn
+            v-if="person.payDate"
+            disabled
             color="success"
             class="mr-3"
-            @click="addPaymentFlag"
+            @click="addPaymentFlag(person.id)"
+          >
+          {{person.payDate.toString()}} に支払い済み
+          </v-btn>
+          <v-btn
+            v-else
+            color="success"
+            class="mr-3"
+            @click="addPaymentFlag(person.id)"
           >
           支払い済みにする
           </v-btn>
+
         </v-card-text>
       </v-card>
     </div>
@@ -95,14 +107,15 @@ export default {
     changePage: function() {
       this.$router.push({ name: 'ShoppingList', params: { cartId: this.cartId }});
     },
-    addPaymentFlag: function() {
-      console.log(this.cartName, this.userName);
+    addPaymentFlag: function(personId) {
+      const date = new Date().toLocaleString('ja-JP', {era:'long'});
+      console.log(personId, date);
+
       const db = firebase.firestore();
-      db.collection('rooms').doc(this.cartName).collection('carts').add({user: this.userName, cart:this.products}).then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
-          alert("送信に成功しました！");
-          this.cartName = "";
-          this.userName = "";
+      const docRef = db.collection("rooms").doc(this.cartId).collection("carts").doc(personId);
+
+      docRef.update({payDate: date}).then((docRef) => {
+          console.log("Thankyou for payment");
       });
     },
     fetchCartsInfo: function() {
@@ -141,7 +154,7 @@ export default {
     makeLinearOrderArrayFromCartsArray: function(cartsArray) {
       let productsArray = [];
       for(const cart of cartsArray) {
-        console.log(cart);
+        console.log("cart", cart);
         cart.cart.forEach(function(part) {
           productsArray.push(part);
         });
